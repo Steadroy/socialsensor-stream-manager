@@ -40,7 +40,7 @@ public class Consumer extends Thread{
 					dump(item);
 				}
 
-			} catch(IOException e) {
+			} catch(Exception e) {
 				e.printStackTrace();
 				
 			}

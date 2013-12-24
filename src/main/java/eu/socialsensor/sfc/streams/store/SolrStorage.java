@@ -35,6 +35,7 @@ public class SolrStorage implements StreamUpdateStorage {
 	private SolrMediaItemHandler solrMediaHandler = null; 
 	
 	public SolrStorage(StorageConfiguration config) throws IOException {
+		logger.info("Create Solr Storage instance");
 		this.hostname = config.getParameter(SolrStorage.HOSTNAME);
 		this.service = config.getParameter(SolrStorage.SERVICE);
 		this.itemsCollection = config.getParameter(SolrStorage.ITEMS_COLLECTION);
@@ -47,7 +48,7 @@ public class SolrStorage implements StreamUpdateStorage {
 	
 	@Override
 	public void open() throws IOException {
-		
+		logger.info("Open Solr Storage");
 		if(itemsCollection != null) {	
 			solrItemHandler = SolrItemHandler.getInstance(hostname+"/"+service+"/"+itemsCollection);
 		}
@@ -76,17 +77,6 @@ public class SolrStorage implements StreamUpdateStorage {
 					solrMediaHandler.insertMediaItem(mediaItem);
 				}
 				else {
-					
-					for(String key : mediaItem.getFeedKeywords()){
-						if(!mi.getFeedKeywords().contains(key)){
-							mi.getFeedKeywords().add(key);
-						}
-							
-					}
-					for(String key : mediaItem.getFeedKeywordsString()) {
-						if(!mi.getFeedKeywordsString().contains(key))
-							mi.getFeedKeywordsString().add(key);
-					}
 					solrMediaHandler.insertMediaItem(mi);
 				}
 			}
