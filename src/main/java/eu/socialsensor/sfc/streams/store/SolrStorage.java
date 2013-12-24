@@ -71,14 +71,7 @@ public class SolrStorage implements StreamUpdateStorage {
 		if(solrMediaHandler != null) {
 			
 			for(MediaItem mediaItem : item.getMediaItems()) {
-				MediaItem mi = solrMediaHandler.getSolrMediaItem(mediaItem.getId());
-				
-				if(mi==null) {
-					solrMediaHandler.insertMediaItem(mediaItem);
-				}
-				else {
-					solrMediaHandler.insertMediaItem(mi);
-				}
+				solrMediaHandler.insertMediaItem(mediaItem);
 			}
 		}
 		
