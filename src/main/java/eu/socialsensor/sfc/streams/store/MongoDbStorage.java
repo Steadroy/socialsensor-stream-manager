@@ -147,8 +147,12 @@ public class MongoDbStorage implements StreamUpdateStorage {
 				if(!mediaItemDAO.exists(mediaItem.getId())) {
 					// save media item
 					mediaItemDAO.addMediaItem(mediaItem);
+					mediaItemDAO.addMediaItem(mediaItem.getId(), 
+							mediaItem.getRef(), mediaItem.getPublicationTime(), mediaItem.getUserId());
 				}
 				else {
+					mediaItemDAO.addMediaItem(mediaItem.getId(), 
+							mediaItem.getRef(), mediaItem.getPublicationTime(), mediaItem.getUserId());
 					//mediaItemDAO.updateMediaItemPopularity(mediaItem);
 				}
 			}
