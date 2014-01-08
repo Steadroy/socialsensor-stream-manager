@@ -1,6 +1,10 @@
 package eu.socialsensor.sfc.streams.store;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -19,10 +23,14 @@ import eu.socialsensor.sfc.streams.StorageConfiguration;
  */
 public class RedisStorage implements StreamUpdateStorage {
 
+	private Logger  logger = Logger.getLogger(SolrStorage.class);
+	
 	private static String HOST = "redis.host";
 	private static String WEBPAGES_CHANNEL = "redis.webpages.channel";
-	private static String MEDIA_CHANNEL = "redis.mesia.channel";
+	private static String MEDIA_CHANNEL = "redis.media.channel";
 	private static String ITEMS_CHANNEL = "redis.items.channel";
+	
+	Set<String> media = new HashSet<String>();
 	
 	private Jedis publisherJedis;
 	private String host;
@@ -40,6 +48,9 @@ public class RedisStorage implements StreamUpdateStorage {
 	
 	@Override
 	public void open() throws IOException {
+		
+		logger.info("Open redis storage in " + host);
+		
 		JedisPoolConfig poolConfig = new JedisPoolConfig();
         JedisPool jedisPool = new JedisPool(poolConfig, host, 6379, 0);
 		
@@ -48,20 +59,24 @@ public class RedisStorage implements StreamUpdateStorage {
 
 	@Override
 	public void store(Item item) throws IOException {
-		if(itemsChannel != null)
-			publisherJedis.publish(itemsChannel, item.toJSONString());
+//		if(itemsChannel != null)
+//			publisherJedis.publish(itemsChannel, item.toJSONString());
 		
 		if(mediaItemsChannel != null) {
 			for(MediaItem mediaItem : item.getMediaItems()) {
-				publisherJedis.publish(mediaItemsChannel, mediaItem.toJSONString());
+				if(!media.contains(mediaItem.getId())) {
+					media.add(mediaItem.getId());
+					publisherJedis.publish(mediaItemsChannel, mediaItem.toJSONString());
+				}
 			}
+			
 		}
 		
-		if(webPagesChannel != null) {
-			for(WebPage webPage : item.getWebPages()) {
-				publisherJedis.publish(webPagesChannel, webPage.toJSONString());
-			}
-		}
+//		if(webPagesChannel != null) {
+//			for(WebPage webPage : item.getWebPages()) {
+//				publisherJedis.publish(webPagesChannel, webPage.toJSONString());
+//			}
+//		}
 	}
 
 	
