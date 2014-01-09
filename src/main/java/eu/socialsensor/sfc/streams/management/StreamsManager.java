@@ -46,7 +46,7 @@ public class StreamsManager {
 	private Map<String, Stream> streams = null;
 	private Map<String, Stream> subscribers = null;
 	private StreamsManagerConfiguration config = null;
-	private InputConfiguration input_config = null;
+	private InputConfiguration inputConfig = null;
 	private StoreManager storeManager;
 	private ConfigFeedsCreator configFeedsCreator;
 	private MongoFeedCreator mongoFeedsCreator;
@@ -57,7 +57,7 @@ public class StreamsManager {
 
 	private List<Feed> feeds = new ArrayList<Feed>();
 
-	public StreamsManager(StreamsManagerConfiguration config,InputConfiguration input_config) throws StreamException {
+	public StreamsManager(StreamsManagerConfiguration config, InputConfiguration inputConfig) throws StreamException {
 
 		if (config == null) {
 			throw new StreamException("Manager's configuration must be specified");
@@ -65,7 +65,7 @@ public class StreamsManager {
 		
 		//Set the configuration files
 		this.config = config;
-		this.input_config = input_config;
+		this.inputConfig = inputConfig;
 		
 		//Set up the Subscribers
 		initSubscribers();
@@ -98,7 +98,18 @@ public class StreamsManager {
 			storeManager.start();	
 			logger.info("Store Manager is ready to store.");
 			
-			FeedsCreator feedsCreator = new FeedsCreator(DataInputType.CONFIG_FILE, input_config);
+			FeedsCreator feedsCreator = null;
+			if(inputConfig.getStreamInputIds()!=null && !inputConfig.getStreamInputIds().isEmpty()) {
+				feedsCreator = new FeedsCreator(DataInputType.CONFIG_FILE, inputConfig);
+			}
+			else if(inputConfig.getStorageInputIds()!=null && !inputConfig.getStorageInputIds().isEmpty()) {
+				feedsCreator = new FeedsCreator(DataInputType.MONGO_STORAGE, inputConfig);
+			}
+			else {
+				System.out.println("Neither config file nor mongo");
+				return;
+			}
+			
 			Map<String,List<Feed>> results = feedsCreator.getQueryPerStream();
 			
 			//Start the Subscribers

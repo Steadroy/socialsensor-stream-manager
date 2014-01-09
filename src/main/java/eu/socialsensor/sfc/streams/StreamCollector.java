@@ -43,9 +43,9 @@ public class StreamCollector {
 		
 		try {
 			StreamsManagerConfiguration config = StreamsManagerConfiguration.readFromFile(streamConfigFile);		
-			InputConfiguration input_config = InputConfiguration.readFromFile(inputConfigFile);		
+			InputConfiguration inputConfig = InputConfiguration.readFromFile(inputConfigFile);		
 	        
-			StreamsManager manager = new StreamsManager(config,input_config);
+			StreamsManager manager = new StreamsManager(config, inputConfig);
 			manager.open();
 			
 			waiting();
