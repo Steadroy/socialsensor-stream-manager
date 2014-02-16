@@ -21,7 +21,6 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisPubSub;
 import eu.socialsensor.framework.client.dao.DyscoRequestDAO;
-import eu.socialsensor.framework.client.dao.ItemDAO;
 import eu.socialsensor.framework.client.dao.TopicDAO;
 import eu.socialsensor.framework.client.dao.impl.DyscoRequestDAOImpl;
 import eu.socialsensor.framework.client.dao.impl.TopicDAOImpl;
@@ -65,7 +64,6 @@ public class DyscoManager {
 	}
 
 	private DyscoManagerState state = DyscoManagerState.CLOSE;
-	private StreamsManagerConfiguration config = null;
 	private DyscoRequestHandler dyscoRequestHandler;
 	private Jedis subscriberJedis;
 	
@@ -76,7 +74,6 @@ public class DyscoManager {
 	private String rssCollectionName;
 	
 	private DyscoRequestDAO dyscoRequestDAO;
-	private ItemDAO itemDAO;
 	private TopicDAO topicDAO;
 	
 	private RSSProcessor rssProcessor;
@@ -90,8 +87,6 @@ public class DyscoManager {
 		if (config == null) {
 			throw new StreamException("Manager's configuration must be specified");
 		}
-		
-		this.config = config;
 		
 		StorageConfiguration storage_config = config.getStorageConfig("Mongodb");
 		this.host = storage_config.getParameter(DyscoManager.GLOBAL_HOST);
@@ -290,12 +285,9 @@ public class DyscoManager {
 	 *
 	 */
 	private class DyscoRequestHandler extends JedisPubSub {
-	
-		private DyscoManager dyscoManager;
-		private DyscoRequest request;
 		
 		public DyscoRequestHandler(DyscoManager dyscoManager){
-			this.dyscoManager = dyscoManager;
+
 		}
 		
 		/**

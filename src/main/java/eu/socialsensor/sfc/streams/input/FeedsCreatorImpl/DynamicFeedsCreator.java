@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 
 
+
 import eu.socialsensor.framework.common.domain.Feed;
 import eu.socialsensor.framework.common.domain.Keyword;
 import eu.socialsensor.framework.common.domain.Stopwords;
@@ -336,6 +337,7 @@ public class DynamicFeedsCreator implements FeedsCreator{
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> extractFeedInfo(){
 		

@@ -50,6 +50,7 @@ public class ConfigFeedsCreator implements FeedsCreator{
 		this.configFile = configFile;
 	}
 	
+	@SuppressWarnings({ "unused", "unchecked" })
 	@Override
 	public List<String> extractFeedInfo() {
 		
@@ -64,8 +65,7 @@ public class ConfigFeedsCreator implements FeedsCreator{
 				logger.error("ParseException : "+e);
 			}
 		}
-		
-	
+
 		String value;
 		
 		value = configFile.getParameter(KEYWORDS);

@@ -2,7 +2,6 @@ package eu.socialsensor.sfc.streams;
 
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.jinstagram.entity.users.basicinfo.UserInfoData;
 import org.jinstagram.entity.users.feed.MediaFeedData;
 import org.jinstagram.exceptions.InstagramException;
 
@@ -28,23 +28,19 @@ import com.mongodb.MongoClient;
 import eu.socialsensor.framework.abstractions.flickr.FlickrStreamUser;
 import eu.socialsensor.framework.abstractions.instagram.InstagramItem;
 import eu.socialsensor.framework.abstractions.instagram.InstagramStreamUser;
-import eu.socialsensor.framework.abstractions.twitpic.TwitPicUser;
 import eu.socialsensor.framework.client.dao.MediaItemDAO;
 import eu.socialsensor.framework.client.dao.StreamUserDAO;
 import eu.socialsensor.framework.client.dao.impl.MediaItemDAOImpl;
 import eu.socialsensor.framework.client.dao.impl.StreamUserDAOImpl;
+import eu.socialsensor.framework.client.mongo.MongoHandler;
 import eu.socialsensor.framework.client.search.solr.SolrMediaItemHandler;
 import eu.socialsensor.framework.common.domain.Item;
 import eu.socialsensor.framework.common.domain.MediaItem;
 import eu.socialsensor.framework.common.domain.StreamUser;
 import eu.socialsensor.framework.common.factories.ObjectFactory;
-import eu.socialsensor.framework.retrievers.Retriever;
-import eu.socialsensor.framework.retrievers.facebook.FacebookRetriever;
 import eu.socialsensor.framework.retrievers.flickr.FlickrRetriever;
 import eu.socialsensor.framework.retrievers.instagram.InstagramRetriever;
-import eu.socialsensor.framework.retrievers.twitpic.TwitpicMediaRetriever;
 import eu.socialsensor.framework.retrievers.twitter.TwitterRetriever;
-import eu.socialsensor.framework.retrievers.youtube.YtMediaRetriever;
 import eu.socialsensor.framework.streams.StreamException;
 
 public class Importer {
@@ -75,8 +71,8 @@ public class Importer {
 		//System.out.println("Done");
 		//System.exit(0);
 		
-		//String instagramToken = "342704836.5b9e1e6.503a35185da54224adaa76161a573e71";
-		//String instagramSecret = "e53597da6d7749d2a944651bbe6e6f2a";
+		String instagramToken = "342704836.5b9e1e6.503a35185da54224adaa76161a573e71";
+		String instagramSecret = "e53597da6d7749d2a944651bbe6e6f2a";
 		
 		//String youtubeClientId = "manosetro";
 		//String youtubeDevKey = "AI39si6DMfJRhrIFvJRv0qFubHHQypIwjkD-W7tsjLJArVKn9iR-QoT8t-UijtITl4TuyHzK-cxqDDCkCBoJB-seakq1gbt1iQ";
@@ -89,12 +85,34 @@ public class Importer {
 		
 		
 		//YtMediaRetriever retriever = new YtMediaRetriever(youtubeClientId, youtubeDevKey);
-		//InstagramRetriever retriever = new InstagramRetriever(instagramSecret, instagramToken, 1, 1);
+		InstagramRetriever retriever = new InstagramRetriever(instagramSecret, instagramToken, 1, 1);
 		//TwitpicMediaRetriever retriever = new TwitpicMediaRetriever();
 		//FlickrRetriever retriever = new FlickrRetriever(flickrKey, flickrSecret, 1, 1);
 		//FacebookRetriever retriever = new FacebookRetriever(facebookKey, facebookSecret, 1, 1);
 
+		StreamUserDAO dao = new StreamUserDAOImpl("160.40.51.18", "GreekNews", "StreamUsers");
 		
+		Set<String> ids = new HashSet<String>();
+		MongoHandler handler = new MongoHandler("160.40.51.18", "GreekNews", "MediaItems", null);
+		List<String> response = handler.findMany(new BasicDBObject("streamId", "Instagram"), 5000);
+		System.out.println(response.size());
+		for(String json : response) {
+			MediaItem mItem = ObjectFactory.createMediaItem(json);
+			
+			String userId = mItem.getUserId();
+			ids.add(userId.split("#")[1]);
+		}
+		System.out.println(ids.size() + " userids");
+		for(String userId : ids) {
+			try {
+				UserInfoData userResp = retriever.retrieveUser(userId);
+				StreamUser user = new InstagramStreamUser(userResp);
+				dao.insertStreamUser(user);
+				System.out.println(user.toJSONString());
+			} catch (InstagramException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -119,7 +137,7 @@ public class Importer {
 		String mongoDb2 = "FeteBerlin";
 		
 		MediaItemDAO dao = new MediaItemDAOImpl(mongoHost2, mongoDb2, "MediaItems");
-		StreamUserDAO udao = new StreamUserDAOImpl(mongoHost2, mongoDb2, "StreamUsers");
+		//StreamUserDAO udao = new StreamUserDAOImpl(mongoHost2, mongoDb2, "StreamUsers");
 		
 		BasicDBObject query = new BasicDBObject("streamId", stream);
 		
@@ -393,12 +411,12 @@ public class Importer {
 		String mongoHost = "160.40.51.18";
 		String mongoDb = "gezi";
 		String mongoCollection = "MediaItems";
-		String usersCollection = "WebPages";
+		//String usersCollection = "WebPages";
 		
 		MongoClient client = new MongoClient(mongoHost);
 		DB db = client.getDB(mongoDb);
 		DBCollection mediaColl = db.getCollection(mongoCollection);
-		DBCollection wpColl = db.getCollection(usersCollection);
+		//DBCollection wpColl = db.getCollection(usersCollection);
 
 		
 		DBCursor cursor = mediaColl.find(new BasicDBObject("streamId","Web"));
@@ -411,11 +429,11 @@ public class Importer {
 			if(k % 1000 == 0)
 				System.out.println(k+" clusters processed!");
 			
-			DBObject obj = cursor.next();
+			//DBObject obj = cursor.next();
 			
-			Object ref = obj.get("reference");
+			//Object ref = obj.get("reference");
 			
-			DBObject wp = wpColl.findOne(new BasicDBObject("reference", ref));
+			//DBObject wp = wpColl.findOne(new BasicDBObject("reference", ref));
 
 			
 		}

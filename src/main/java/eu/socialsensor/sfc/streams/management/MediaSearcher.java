@@ -1,9 +1,7 @@
 package eu.socialsensor.sfc.streams.management;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
@@ -15,7 +13,6 @@ import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisPubSub;
 
 import eu.socialsensor.framework.client.search.solr.SolrDyscoHandler;
-import eu.socialsensor.framework.common.domain.Feed;
 import eu.socialsensor.framework.common.domain.dysco.Dysco;
 import eu.socialsensor.framework.streams.Stream;
 import eu.socialsensor.framework.streams.StreamConfiguration;
@@ -36,6 +33,8 @@ public class MediaSearcher {
 	private StreamsManagerConfiguration config = null;
 	private StoreManager storeManager;
 	private StreamsMonitor monitor;
+	
+	
 	private ManagerState state = ManagerState.CLOSE;
 	private Jedis subscriberJedis;
 	private DyscoRequestHandler dyscoRequestHandler;
@@ -44,11 +43,7 @@ public class MediaSearcher {
 	private String host;
 	private String dyscoCollection;
 	
-	private int numberOfConsumers = 1; //for multi-threaded items' storage
-	
 	private Map<String, Stream> streams = null;
-	
-	private List<Feed> feeds = new ArrayList<Feed>();
 	
 	private Queue<Dysco> requests = new LinkedList<Dysco>();
 	
@@ -105,6 +100,7 @@ public class MediaSearcher {
         }).start();
 		
 		state = ManagerState.OPEN;
+		
 	}
 	
 	/**
@@ -118,6 +114,8 @@ public class MediaSearcher {
 		}
 		
 		try{
+			monitor.stop();
+			
 			for (Stream stream : streams.values()) {
 				stream.close();
 			}
@@ -163,8 +161,6 @@ public class MediaSearcher {
 	 *
 	 */
 	private class DyscoRequestHandler extends Thread {
-
-		private boolean isAlive = true;
 		
 		public DyscoRequestHandler(){
 			
@@ -204,7 +200,7 @@ public class MediaSearcher {
 		}
 		
 		public void close(){
-			isAlive = true;
+
 		}
 	}
 	

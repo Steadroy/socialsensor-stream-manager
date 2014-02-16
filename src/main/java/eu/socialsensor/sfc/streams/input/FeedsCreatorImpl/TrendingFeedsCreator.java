@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.Map.Entry;
 
@@ -134,6 +133,8 @@ public class TrendingFeedsCreator implements FeedsCreator{
 		System.out.println();
 		*/
 	}
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> extractFeedInfo(){
 		List<String> dyscoKeywords = new ArrayList<String>();

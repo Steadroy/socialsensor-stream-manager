@@ -41,6 +41,7 @@ public class CustomFeedsCreator implements FeedsCreator{
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> extractFeedInfo(){
 		filterContent();

@@ -2,20 +2,12 @@ package eu.socialsensor.sfc.streams.management;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import eu.socialsensor.framework.client.dao.TimeslotDAO;
-import eu.socialsensor.framework.client.dao.impl.TimeslotDAOImpl;
 import eu.socialsensor.framework.common.domain.Item;
-import eu.socialsensor.framework.common.domain.Timeslot;
 import eu.socialsensor.framework.streams.StreamException;
 import eu.socialsensor.framework.streams.StreamHandler;
 import eu.socialsensor.sfc.streams.StorageConfiguration;

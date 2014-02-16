@@ -1,8 +1,6 @@
 package eu.socialsensor.sfc.streams.store;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -16,7 +14,6 @@ import eu.socialsensor.sfc.streams.StorageConfiguration;
  * Class for storing items to solr
  * @author manosetro
  * @email  manosetro@iti.gr
- *
  */
 public class SolrStorage implements StreamUpdateStorage {
 

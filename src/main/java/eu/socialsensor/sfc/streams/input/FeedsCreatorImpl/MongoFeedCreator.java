@@ -29,7 +29,6 @@ public class MongoFeedCreator implements FeedsCreator{
 	protected static final String DB = "mongodb.database";
 	protected static final String SOURCES_COLLECTION = "mongodb.sources.collection";
 	
-	private StreamsManagerConfiguration configFile;
 	private StorageConfiguration storageConfig;
 	
 	private String host = null;
@@ -46,8 +45,6 @@ public class MongoFeedCreator implements FeedsCreator{
 	public Map<String, Set<String>> usersToLists = new HashMap<String, Set<String>>();
 	
 	public MongoFeedCreator(StreamsManagerConfiguration configFile){
-		this.configFile = configFile;
-		
 		storageConfig = configFile.getStorageConfig("Mongodb");
 	}
 	
@@ -70,6 +67,7 @@ public class MongoFeedCreator implements FeedsCreator{
 			
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Source> extractFeedInfo(){
 		this.host = storageConfig.getParameter(MongoFeedCreator.HOST);

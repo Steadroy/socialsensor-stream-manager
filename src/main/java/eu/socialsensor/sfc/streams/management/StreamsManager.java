@@ -20,10 +20,7 @@ import eu.socialsensor.sfc.builder.FeedsCreator;
 import eu.socialsensor.sfc.builder.InputConfiguration;
 import eu.socialsensor.sfc.builder.input.DataInputType;
 import eu.socialsensor.sfc.streams.StreamsManagerConfiguration;
-import eu.socialsensor.sfc.streams.input.FeedsCreatorImpl.ConfigFeedsCreator;
-import eu.socialsensor.sfc.streams.input.FeedsCreatorImpl.MongoFeedCreator;
 import eu.socialsensor.sfc.streams.monitors.StreamsMonitor;
-
 
 /**
  * Thread-safe class for retrieving content according to 
@@ -48,8 +45,7 @@ public class StreamsManager {
 	private StreamsManagerConfiguration config = null;
 	private InputConfiguration inputConfig = null;
 	private StoreManager storeManager;
-	private ConfigFeedsCreator configFeedsCreator;
-	private MongoFeedCreator mongoFeedsCreator;
+
 	private StreamsMonitor monitor;
 	private ManagerState state = ManagerState.CLOSE;
 	

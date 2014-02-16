@@ -58,7 +58,7 @@ public class DyscoManagerOld {
 	}
 
 	private DyscoManagerState state = DyscoManagerState.CLOSE;
-	private StreamsManagerConfiguration config = null;
+
 	private DyscoRequestHandler dyscoRequestHandler;
 	private Jedis subscriberJedis;
 	
@@ -79,8 +79,6 @@ public class DyscoManagerOld {
 		if (config == null) {
 			throw new StreamException("Manager's configuration must be specified");
 		}
-		
-		this.config = config;
 		
 		StorageConfiguration storage_config = config.getStorageConfig("Mongodb");
 		this.host = storage_config.getParameter(DyscoManagerOld.GLOBAL_HOST);

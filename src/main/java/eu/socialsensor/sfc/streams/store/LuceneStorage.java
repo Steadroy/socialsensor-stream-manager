@@ -81,7 +81,6 @@ public class LuceneStorage implements StreamUpdateStorage {
 		TweetAnalyzer tweetAnalyzer;
 		File f;
 		if( (stopwords_file != null) && ((f = new File(stopwords_file)).exists())) {
-			@SuppressWarnings("unchecked")
 			List<String> stopwordsLines = FileUtils.readLines(f, "utf-8");
 			Set<String> stopwordsSet = new HashSet<String>(stopwordsLines);
 			tweetAnalyzer = new TweetAnalyzer(Version.LUCENE_40, stopwordsSet, ngrams);

@@ -5,7 +5,13 @@ import com.google.gson.GsonBuilder;
 
 import eu.socialsensor.framework.common.domain.JSONable;
 
-public class FeedKeyword implements JSONable{
+public class FeedKeyword implements JSONable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8224899984448712945L;
+	
 	
 	private final static Double DF = 1.0;
 	private final static Double AP_TITLE = 0.8;

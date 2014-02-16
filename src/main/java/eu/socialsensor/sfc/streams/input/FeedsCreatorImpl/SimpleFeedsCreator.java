@@ -116,7 +116,7 @@ public class SimpleFeedsCreator implements FeedsCreator{
 		*/
 	}
 	
-	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> extractFeedInfo(){
 		
