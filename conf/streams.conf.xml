@@ -75,7 +75,7 @@
 		<!-- Twitter Stream Handler -->
 		<Stream id="Twitter">
 			<Parameter name="Classpath">
-				<![CDATA[eu.socialsensor.framework.streams.twitter.TwitterStream]]>
+				<![CDATA[eu.socialsensor.framework.streams.TwitterStream]]>
 			</Parameter>
             <Parameter name="Key">
 				<![CDATA[your.key]]>
@@ -95,7 +95,7 @@
 		<!-- YouTube Handler 
 		<Stream id="YouTube">
 			<Parameter name="Classpath">
-				<![CDATA[eu.socialsensor.framework.streams.youtube.YoutubeStream]]>
+				<![CDATA[eu.socialsensor.framework.streams.YoutubeStream]]>
 			</Parameter>
 			<Parameter name="ClientId">
 				<![CDATA[your.clientId]]>
@@ -119,7 +119,7 @@
 		<!-- Flickr Stream Handler  
 		<Stream id="Flickr">
 			<Parameter name="Classpath">
-				<![CDATA[eu.socialsensor.framework.streams.flickr.FlickrStream]]>
+				<![CDATA[eu.socialsensor.framework.streams.FlickrStream]]>
 			</Parameter>
 			<Parameter name="Key">
 				<![CDATA[your.key]]>
@@ -143,7 +143,7 @@
 		<!-- Google+ Stream Handler 
 		<Stream id="GooglePlus">
 			<Parameter name="Classpath">
-				<![CDATA[eu.socialsensor.framework.streams.gplus.GooglePlusStream]]>
+				<![CDATA[eu.socialsensor.framework.streams.GooglePlusStream]]>
 			</Parameter>
 			<Parameter name="Key">
 				<![CDATA[your.key]]>
@@ -170,7 +170,7 @@
 		<!-- Tumblr Stream Handler  
 		<Stream id="Tumblr">
 			<Parameter name="Classpath">
-				<![CDATA[eu.socialsensor.framework.streams.tumblr.TumblrStream]]>
+				<![CDATA[eu.socialsensor.framework.streams.TumblrStream]]>
 			</Parameter>
 			<Parameter name="Key">
 				<![CDATA[your.key]]>
@@ -195,7 +195,7 @@
 		<!--  Instagram Stream Handler 
 		<Stream id="Instagram">
 			<Parameter name="Classpath">
-				<![CDATA[eu.socialsensor.framework.streams.instagram.InstagramStream]]>
+				<![CDATA[eu.socialsensor.framework.streams.InstagramStream]]>
 			</Parameter>
 			<Parameter name="Key">
 				<![CDATA[your.key]]>
