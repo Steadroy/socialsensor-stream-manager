@@ -270,6 +270,7 @@ public class MongoDbStorage implements Storage {
 			long time = System.currentTimeMillis();
 			// Handle Items
 			String itemId = item.getId();
+			StreamUser user = item.getStreamUser();
 			
 			boolean itemExists = false;
 			synchronized(itemsMap) {
@@ -284,6 +285,36 @@ public class MongoDbStorage implements Storage {
 				
 				item.setInsertionTime(System.currentTimeMillis());
 				itemDAO.insertItem(item);
+				
+				String userId = user.getId();
+				if(user != null) {
+			
+					users++;		
+					user.setLastUpdated(System.currentTimeMillis());
+
+					boolean userExists = false;
+					synchronized(usersMap) {
+						userExists = usersMap.containsKey(userId) || streamUserDAO.exists(userId);
+					}
+					
+					if(!userExists) {	
+						// save stream user
+						userInsertions++;
+						streamUserDAO.insertStreamUser(user);
+					}
+				
+					StreamUser tempUser = usersMap.get(user.getId());
+					if(tempUser == null) {
+						tempUser = new StreamUser(null, Operation.UPDATE);
+						tempUser.setId(user.getId());
+						tempUser.setImageUrl(user.getImageUrl());
+						tempUser.setProfileImage(user.getProfileImage());
+						tempUser.setName(user.getName());
+						tempUser.setLastUpdated(user.getLastUpdated());
+						usersMap.put(user.getId(), tempUser);
+					}
+					tempUser.incItems(1);
+				}
 				
 				if(item.getMentions() != null) {
 					String[] mentionedUsers = item.getMentions();
@@ -320,12 +351,13 @@ public class MongoDbStorage implements Storage {
 						mediaItems++;
 						String mediaItemId = mediaItem.getId();
 					
-						boolean mediaExists = false;
-						synchronized(mediaItemsSharesMap) {
-							mediaExists = mediaItemsSharesMap.containsKey(mediaItemId) || mediaItemDAO.exists(mediaItemId);
-						}
-					
-						if(!mediaExists) {	
+						//boolean mediaExists = false;
+						//synchronized(mediaItemsSharesMap) {
+						//	mediaExists = mediaItemsSharesMap.containsKey(mediaItemId) || mediaItemDAO.exists(mediaItemId);
+						//}
+						
+						//if(!mediaExists) {	
+						if(item.isOriginal()) {
 							// MediaItem does not exist. Save it.
 							mediaItemInsertions++;
 							mediaItemDAO.addMediaItem(mediaItem);
@@ -343,6 +375,7 @@ public class MongoDbStorage implements Storage {
 								mediaItemsSharesMap.put(mediaItemId, ++shares);
 							}
 						}
+						
 					
 						if(mediaSharesDAO != null) {
 							mediaSharesDAO.addMediaShare(mediaItem.getId(), mediaItem.getRef(), 
@@ -387,26 +420,10 @@ public class MongoDbStorage implements Storage {
 				synchronized(itemsMap) {
 					itemsMap.put(item.getId(), item);
 				}
-			}
-			
-			// Handle Stream Users
-			StreamUser user = item.getStreamUser();
-			if(user != null) {
 				
-				user.setLastUpdated(System.currentTimeMillis());
-				
-				users++;
-				
-				String userId = user.getId();
-				boolean userExists = false;
-				synchronized(usersMap) {
-					userExists = usersMap.containsKey(userId);
-				}
-				
-				if(!userExists) {
-					// save stream user
-					userInsertions++;
-					streamUserDAO.insertStreamUser(user);
+				// Handle Stream Users
+				if(user != null) {
+					user.setLastUpdated(System.currentTimeMillis());
 					
 					StreamUser tempUser = usersMap.get(user.getId());
 					if(tempUser == null) {
@@ -419,7 +436,6 @@ public class MongoDbStorage implements Storage {
 						usersMap.put(user.getId(), tempUser);
 					}
 					tempUser.incItems(1);
-					tempUser.incMentions(1L);
 				}
 			}
 			

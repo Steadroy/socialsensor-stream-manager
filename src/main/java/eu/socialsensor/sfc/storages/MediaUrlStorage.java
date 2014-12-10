@@ -11,7 +11,7 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.tika.io.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
