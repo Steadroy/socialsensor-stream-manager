@@ -4,7 +4,7 @@
 
     <groupId>eu.socialsensor</groupId>
     <artifactId>socialsensor-stream-manager</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 	
     <name>socialsensor-stream-manager</name>
@@ -54,27 +54,27 @@
         <dependency>
             <groupId>eu.socialsensor</groupId>
             <artifactId>socialsensor-framework-common</artifactId>
-            <version>0.2.2-SNAPSHOT</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
       	<dependency>
         	<groupId>eu.socialsensor</groupId>
         	<artifactId>geo-util</artifactId>
-        	<version>0.1-SNAPSHOT</version>
+        	<version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
   			<groupId>eu.socialsensor</groupId>
   			<artifactId>socialmedia-abstractions</artifactId>
-  			<version>0.2-SNAPSHOT</version>
+  			<version>0.3-SNAPSHOT</version>
 		</dependency>
         <dependency>
             <groupId>eu.socialsensor</groupId>
             <artifactId>socialsensor-framework-client</artifactId>
-            <version>0.2.2-SNAPSHOT</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>eu.socialsensor</groupId>
 			<artifactId>socialsensor-query-builder</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
         	<groupId>com.thinkaurelius.titan</groupId>
