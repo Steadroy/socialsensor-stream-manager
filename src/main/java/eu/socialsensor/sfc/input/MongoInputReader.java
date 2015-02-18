@@ -21,6 +21,7 @@ import eu.socialsensor.framework.client.dao.impl.SourceDAOImpl;
 import eu.socialsensor.framework.common.domain.Feed;
 import eu.socialsensor.framework.common.domain.Feed.FeedType;
 import eu.socialsensor.framework.common.domain.feeds.KeywordsFeed;
+import eu.socialsensor.framework.common.domain.feeds.ListFeed;
 import eu.socialsensor.framework.common.domain.feeds.LocationFeed;
 import eu.socialsensor.framework.common.domain.feeds.SourceFeed;
 import eu.socialsensor.framework.common.domain.feeds.URLFeed;
@@ -44,6 +45,7 @@ public class MongoInputReader implements InputReader {
 	protected static final String HOST = "host";
 	protected static final String DB = "database";
 	protected static final String SOURCES_COLLECTION = "sources.collection";
+	protected static final String LISTS_COLLECTION = "lists.collection";
 	protected static final String RSS_SOURCES_COLLECTION = "rss_sources.collection";
 	protected static final String EXPERTS_COLLECTION = "experts.collection";
 	protected static final String KEYWORDS_COLLECTION = "keywords.collection";
@@ -55,6 +57,7 @@ public class MongoInputReader implements InputReader {
 	private String host = null;
 	private String db = null;
 	private String newsHoundsCollection = null;
+	private String listsCollection = null;
 	private String expertsCollection = null;
 	private String keywordsCollection;
 	
@@ -84,6 +87,7 @@ public class MongoInputReader implements InputReader {
 		this.host = storage_config.getParameter(MongoInputReader.HOST);
 		this.db = storage_config.getParameter(MongoInputReader.DB);
 		this.newsHoundsCollection = storage_config.getParameter(MongoInputReader.SOURCES_COLLECTION, "Sources");
+		this.listsCollection = storage_config.getParameter(MongoInputReader.LISTS_COLLECTION, "Lists");
 		this.rssSourcesCollection = storage_config.getParameter(MongoInputReader.RSS_SOURCES_COLLECTION, "RssSources");
 		this.expertsCollection = storage_config.getParameter(MongoInputReader.EXPERTS_COLLECTION,"Experts");
 		this.keywordsCollection = storage_config.getParameter(MongoInputReader.KEYWORDS_COLLECTION, "Keywords");
@@ -169,6 +173,17 @@ public class MongoInputReader implements InputReader {
 						}
 						break;
 					
+					case LIST :
+						@SuppressWarnings("unchecked")
+						List<Source> lists = (List<Source>) inputData.get(feedType);
+						for(Source listSource : lists) {
+							String feedID = UUID.randomUUID().toString();
+							ListFeed listFeed = new ListFeed(listSource.getName(), sinceDate, feedID);
+							listFeed.setLabel(listSource.getList());
+							feeds.add(listFeed);
+						}
+						
+						
 					default:
 						break;
 				}
@@ -206,9 +221,11 @@ public class MongoInputReader implements InputReader {
 		
 		//sources
 		List<Source> sources = new ArrayList<Source>();
+		List<Source> lists = new ArrayList<Source>();
 		List<String> rssSources = new ArrayList<String>();
 		
 		SourceDAO sourceDao = new SourceDAOImpl(host, db, newsHoundsCollection);
+		SourceDAO listsDao = new SourceDAOImpl(host, db, listsCollection);
 		RssSourceDAO rssSourceDao = new RssSourceDAOImpl(host, db, rssSourcesCollection);
 		KeywordDAO keywordDao = new KeywordDAOImpl(host,db,keywordsCollection);
 		
@@ -229,6 +246,12 @@ public class MongoInputReader implements InputReader {
 			keywords = keywordDao.findKeywords(SocialNetworkSource.valueOf(streamType));
 		}
 		
+		// extract lists
+		if(!streamType.equals("RSS")) {
+			List<Source> listSources = listsDao.findTopSources(100, SocialNetworkSource.valueOf(streamType));
+			lists.addAll(listSources);
+		}
+
 		if(!keywords.isEmpty()) {
 			inputDataPerType.put(FeedType.KEYWORDS, keywords);
 		}
@@ -237,6 +260,10 @@ public class MongoInputReader implements InputReader {
 			inputDataPerType.put(FeedType.SOURCE, sources);
 		}
 		
+		if(!lists.isEmpty()) {
+			inputDataPerType.put(FeedType.LIST, lists);
+		}
+
 		if(!rssSources.isEmpty()) {
 			inputDataPerType.put(FeedType.URL, rssSources);
 		}
